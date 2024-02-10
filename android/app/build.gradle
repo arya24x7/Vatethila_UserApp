@@ -85,6 +85,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    tasks.whenTaskAdded { task ->
+    if (task.name == 'lintVitalAnalyzeRelease') {
+        task.mustRunAfter ':app:copyReactNativeVectorIconFonts'
+    }
+}
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
