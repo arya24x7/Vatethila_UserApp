@@ -65,7 +65,7 @@ const Login = (props) => {
                 // console.error("ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ");
             }else{
             const isUserLogin = await auth().signInWithEmailAndPassword(email,password);
-            console.log(isUserLogin);
+            // console.log(isUserLogin);
             Toast.show({
                 type: 'success',
                 text1: 'ಸೈನ್ ಇನ್ ಯಶಸ್ವಿಯಾಗಿದೆ',

@@ -220,12 +220,12 @@ setFoodList(filteredData);
   
 }, []);
 
-// useEffect(() => {
+useEffect(() => {
   
-//     urlFunc(allFoodItem);
-//     console.log(imageUrls)
+    urlFunc(allFoodItem);
+    
   
-// }, [allFoodItem]);
+}, [allFoodItem]);
 
 // useEffect(() => {
   
@@ -489,7 +489,7 @@ setFoodList(filteredData);
           <TextInput
             value={input}
             onChangeText={(text) => setInput(text)}
-            style={styles.searchBar}
+            style={[styles.searchBar, { color: 'black' }]}
             placeholder="Search"
             placeholderTextColor={'gray'}
             height={50}
