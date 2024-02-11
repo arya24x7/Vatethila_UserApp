@@ -13,17 +13,20 @@ import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { FlatList } from 'react-native';
+import storage from '@react-native-firebase/storage';
 
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 
-const MainView = (props) => {
+const MainView = ({route}) => {
 
   const navigation = useNavigation();
+  const {allFoodList} = route.params;
 
   const sendData = firestore().collection('test');
+  const[imageUrls,setImageUrls] = React.useState({})
   const [addLoc, setAddLoc] = React.useState('');
   const [addDateFrom, setAddDateFrom] = React.useState('');
   const [addDateTo, setAddDateTo] = React.useState('');
@@ -45,7 +48,7 @@ const MainView = (props) => {
         const updatedSelectedDates = [...selectedDates, selectedDate];
         setSelectedDates(updatedSelectedDates);
         setTextInputValue(updatedSelectedDates.join(' \n'));
-        console.log(textInputValue)
+        // console.log(textInputValue)
       }
     }
     setShowDatePicker(false);
@@ -62,14 +65,46 @@ const MainView = (props) => {
   };
 
   const todayDate = getTodayDate();
+  const fetchImagesWithNames = async (itemName) => {
+    try {
+      const url = await storage()
+        .ref(itemName)
+        .getDownloadURL();
+
+      return url;
+    } catch (e) {
+      // console.error("error getting image URL with .jpg extension", e);
+
+    };
+  }
+  const urlFunc =async (Items)=>{
+    // console.log("items rec ",Items )
+    
+    const urls = {};
+        for (const item of Items) {
+          
+          urls[item.Name] = await fetchImagesWithNames(item.Name);
+          if(item.Name === "ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"){
+            // console.log(urls["ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"])
+          }
+          // console.log(urls)
+          
+          
+        }
+        return urls
+        
+        // console.log("joginder",imageUrls["ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"])
+
+  }
+  
 
   // console.log("todays date",todayDate);
 
 
 
-  React.useEffect(() => {
-    // getDatabase();
-  }, []);
+  // React.useEffect(() => {
+  //   urlFunc(allFoodList)
+  // }, []);
 
   const addField = async () => {
     try {
@@ -92,6 +127,7 @@ const MainView = (props) => {
   }
 
   const btnPressed = () => {
+    // console.log("heyyyy",imageUrls)
 
     if (addLoc == '' && selectedDates == '') {
       Toast.show({
@@ -114,10 +150,22 @@ const MainView = (props) => {
     } else {
       addField();
       setLoading(true);
-      setTimeout(() => {
+      urlFunc(allFoodList).then(urls => {
+        // console.log("god", urls);
         setLoading(false);
-        navigation.navigate('SelectFood', { loc: addLoc, selectedDates, todayDate });
-      }, 6000); // delay of 6 seconds
+        navigation.navigate('SelectFood', { loc: addLoc, selectedDates, todayDate, urls, allFoodList });
+      }).catch(error => {
+        // Handle any errors that occur during the asynchronous operation
+        console.error('Error fetching URLs:', error);
+      });
+      
+        
+      
+      // setTimeout(() => {
+      //   console.log("this is the god",imageUrls)
+      //   setLoading(false);
+      //   navigation.navigate('SelectFood', { loc: addLoc, selectedDates, todayDate, imageUrls });
+      // }, 15000); // delay of 6 seconds
     }
     // props.navigation.navigate("SelectFood")
   };

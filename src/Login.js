@@ -1,14 +1,16 @@
 import {View, StyleSheet, Text, TouchableOpacity, TextInput,Alert,Dimensions} from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Field from './Field';
 import Btn from './Btn';
 import Background from './Background';
+import { useNavigation } from '@react-navigation/native';
 import { Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/auth';
 import { getAuth } from "firebase/auth";
+import firestore from '@react-native-firebase/firestore';
 import Toast from 'react-native-toast-message';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -17,9 +19,13 @@ const {width, height} = Dimensions.get('window');
 
 const Login = (props) => {
 
+  const navigation = useNavigation(); 
+
     const[email,setEmail] = React.useState('');
     const[password,setPassword] = React.useState('');
     const [isForgotPassword, setIsForgotPassword] = React.useState(false);
+    const[allFoodList,setAllFoodList]= React.useState([]);
+    const[imageUrls,setImageUrls] = React.useState({});
 
     const handleResetPassword = () => {
         firebase
@@ -38,6 +44,44 @@ const Login = (props) => {
               });
           });
       };
+
+      const fetchAllItems = async() => {
+        const snapshot = await firestore().collection('menu2').get();
+          let allItemList = [];
+          // console.log("iam in")
+          
+          snapshot.docs.forEach(async (doc) => {
+            // console.log("hey",doc.data().item)
+    
+            
+            if (doc.data().item) {
+              await allItemList.push(doc.data().item)
+              // console.log("hey",doc.data().item)
+              
+            }
+          });
+          const oneDimensionalArray = allItemList.flat();
+          const updatedAllFoodList = oneDimensionalArray.map((item, index) => {
+            return { ID: index + 1, Name: item };
+          
+          });
+
+          setAllFoodList(updatedAllFoodList)
+
+          // fconsole.log(allFoodList)
+          
+      }
+    
+      
+
+      useEffect(() => {
+        fetchAllItems();
+        
+        
+      }, []);
+      
+     
+      
     
 
     const onSignInPressed = async() =>{
@@ -71,7 +115,7 @@ const Login = (props) => {
                 text1: 'ಸೈನ್ ಇನ್ ಯಶಸ್ವಿಯಾಗಿದೆ',
                 position: 'bottom',
               });
-            props.navigation.navigate("MainView")
+            props.navigation.navigate("MainView",{allFoodList})
             } 
             // console.log(email,password);
         }catch(error){

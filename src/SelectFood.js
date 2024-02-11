@@ -39,11 +39,11 @@ const ArrayDates = [];
 const SelectFood = ({ route }) => {
   const navigation = useNavigation();
 
-  const { loc, selectedDates, todayDate } = route.params;
+  const { loc, selectedDates, todayDate , urls ,allFoodList} = route.params;
 
   const [visible, setVisible] = React.useState(false);
   const [dummyArr, setDummyArr] = React.useState([]);
-  const [imageUrls, setImageUrls] = useState({});
+  // const [imageUrls, setImageUrls] = useState({});
   const [imageUrl, setImageUrl] = useState('');
   const [addBfCount, setAddBfCount] = React.useState('');
   const [addLunchCount, setAddLunchCount] = React.useState('');
@@ -127,6 +127,7 @@ const SelectFood = ({ route }) => {
 
     };
   }
+  console.log("hhh",urls)
 
   const fetchAllItems = async() => {
     const snapshot = await firestore().collection('menu2').get();
@@ -155,30 +156,30 @@ const SelectFood = ({ route }) => {
       
   }
 
-  const urlFunc =async (Items)=>{
-    console.log("items rec ",Items )
+  // const urlFunc =async (Items)=>{
+  //   console.log("items rec ",Items )
     
-    const urls = {};
-        for (const item of Items) {
+  //   const urls = {};
+  //       for (const item of Items) {
           
-          urls[item.Name] = await fetchImagesWithNames(item.Name);
-          if(item.Name ==="ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"){
-            // console.log("yaan ulle",urls[item.Name]);
-          }
+  //         urls[item.Name] = await fetchImagesWithNames(item.Name);
+  //         if(item.Name ==="ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"){
+  //           // console.log("yaan ulle",urls[item.Name]);
+  //         }
           
-        }
+  //       }
 
 
 
         
-        // console.log("url",urls["ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"])
-        setImageUrls(urls);
+  //       // console.log("url",urls["ತೆಂಗಿನಕಾಯಿ ಹೋಳಿಗೆ"])
+  //       setImageUrls(urls);
 
-  }
+  // }
 
  useEffect(() => {
   if(input!==''){
-  const filteredData = allFoodItem.filter(item => {
+  const filteredData = allFoodList.filter(item => {
     // Convert item name to lowercase for case-insensitive search
     const itemName = item.Name;
     // Check if the item name contains the search term
@@ -214,18 +215,23 @@ setFoodList(filteredData);
  },[input,selectItemType]
  )
   
- useEffect(() => {
-  fetchAllItems();
+//  useEffect(() => {
+//   fetchAllItems();
   
   
-}, []);
+// }, []);
 
-useEffect(() => {
+// useEffect(() => {
   
-    urlFunc(allFoodItem);
+//     urlFunc(allFoodItem);
     
   
-}, [allFoodItem]);
+// }, [allFoodItem]);
+
+// useEffect(()=> {
+//   console.log("hey broooo",imageUrls)
+//   // setImageUrls(urlOfImage)
+// })
 
 // useEffect(() => {
   
@@ -574,7 +580,7 @@ useEffect(() => {
                 }}>
                   <View style={{ flexDirection: 'row', flex: 1, marginLeft: 20, justifyContent: 'space-between' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 15, marginTop: 65, color: "gray" }}>{item.Name}</Text>
-                    {imageUrls[item.Name] ? (<Image source={{ uri: imageUrls[item.Name] }} style={{ width: 130, height: 130, marginTop: 10, marginBottom: 10, borderRadius: 10, marginRight: 10 }} />)
+                    {urls[item.Name] ? (<Image source={{ uri: urls[item.Name] }} style={{ width: 130, height: 130, marginTop: 10, marginBottom: 10, borderRadius: 10, marginRight: 10 }} />)
                       : (<Image source={require("./assets/no_food.jpeg")} style={{ width: 130, height: 130, marginTop: 10, marginBottom: 10, borderRadius: 10, marginRight: 10 }} />)}
                   </View>
                   <FAB
