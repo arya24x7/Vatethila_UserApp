@@ -117,7 +117,7 @@ const MainView = (props) => {
       setTimeout(() => {
         setLoading(false);
         navigation.navigate('SelectFood', { loc: addLoc, selectedDates, todayDate });
-      }, 6000); // delay of 6 seconds
+      }, 3000); // delay of 6 seconds
     }
     // props.navigation.navigate("SelectFood")
   };

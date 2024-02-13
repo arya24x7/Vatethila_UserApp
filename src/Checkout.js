@@ -62,12 +62,14 @@ const Checkout = ({route}) => {
           await documentRef.set({ dates: tempselectedDates });
     
           // Update the details in a nested collection
-          const nestedCollectionRef = documentRef.collection(selected);
-          const nestedDocRef = nestedCollectionRef.doc('details');
-          await nestedDocRef.update({
-            delivery: boolVal,
-            name: name,
-            phoneNum: phoneNo,
+          selectedDates.forEach(async (selectD) => {
+            const nestedCollectionRef = documentRef.collection(selectD);
+            const nestedDocRef = nestedCollectionRef.doc('details');
+            await nestedDocRef.update({
+              delivery: boolVal,
+              name: name,
+              phoneNum: phoneNo,
+            });
           });
         } else {
           console.log("No current user.");
