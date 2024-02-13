@@ -607,7 +607,7 @@ useEffect(() => {
             height: 100,
             width: windowWidth - 35,
             marginLeft: 15,
-            backgroundColor: "white"
+            backgroundColor: 'rgb(242, 242, 242)'
           }}></View>
         </ScrollView>
         <Modal
